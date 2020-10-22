@@ -1,0 +1,122 @@
+#:kivy 1.11.1
+#defining a rule using <>
+#defining widgets ->
+#GridWidget, Label, TextInput are all objects imported from kivy
+#LoginScreen and RootWidget are objects of the classes(LoginScreen,RootWidget) which we created in the python file 
+<LoginScreen>:
+    GridLayout:                                 #parent gridlayout
+        cols:1                                  #grid layout widget containing the 2 gird sections of the login page
+        GridLayout:                             #child gridlayout
+            cols:1                              #defining first grid layout under the parent grid having 1 column with user login label, username, password, login button
+            padding:15,15                       #padding b/w border and grid
+            spacing:20,20                       #spacing b/w internal attributes inside a gridlayout like TextInput,Label, etc
+            Label:                              #Label widget 
+                text:"User Login"
+                font_size:'20sp'                #sp - space independent pixels
+            TextInput:                          #widget to get input text
+                id:username                     #defining a id for the widget
+                size_hint:1,0.6                 #1 - horizontal,0.6 - vertical space allotment
+                hint_text:"Username"            #text in the TextInput widget before typing anything in it 
+            TextInput:
+                id:password
+                size_hint:1,0.6
+                password:True                   #displaying * when typing password
+                hint_text:"Password"
+            RelativeLayout:                     #pos_hint - doen't work without RelativeLayout, since there are no other widgets beside login button to share the horizontal space with, so we put it under realtivelayout
+                Button:                         #button widget
+                    text:"Login"
+                    on_press: root.login(root.ids.username.text, root.ids.password.text)    #login is the function name, passing the username and password as arguments
+                    pos_hint:{'center_x':0.5,'center_y':0.5}    #defining the horizontal and vertial position
+                    size_hint:0.4,0.6
+            Label:
+                id:authenticate                 #label for incorrect passsword or ID
+                text:""
+        GridLayout:                             #defining second grid layout under the parent grid having 2 columns - forgot username and sign up
+            size_hint:1,0.3                     #0.2 - horizontal, 0.2 - vertical
+            padding:10,10                       
+            spacing:10,0
+            cols:2
+            Button:
+                text:"Forgot Password"
+                background_color:0.1,0.1,1,0    #button background color -> R-0.1,G-0.1,B-1,Opacity-0
+                font_size:"14sp"
+                color:0.2,0.2,1,1               #text color -> R-0.2,G-0.2,B-1,Opacity-1
+                opacity:1 if self.state=="normal" else 0.5      #changing the opacity on pressing 
+
+            Button:
+                text:"Signup"
+                on_press: root.sign_up()        #root is the keyword which refers to the class of the rule i.e. LoginScreen class in py file 
+                background_color:0.1,0.1,1,0    #R,G,B,Opacity
+                font_size:"14sp"
+                color:0.2,0.2,1,1
+                opacity:1 if self.state == "normal" else 0.5    #changing the opacity on pressing 
+<SignupScreen>:
+    GridLayout:
+        cols:1
+        padding:20,20,20,200                    #Left, top, right, bottom
+        spacing:20,20
+        size_hint:1,1
+        Label:
+            font_size:'20sp'
+            text:"Sign Up"
+        TextInput:
+            id:username
+            size_hint:1,0.6
+            hint_text:"Enter Username"
+        TextInput:
+            id:password
+            password:True
+            size_hint:1,0.6
+            hint_text:"Enter Password"
+        RelativeLayout:
+            Button:
+                text:"Sign Up"
+                pos_hint:{'center_x':0.5,'center_y':0.5}
+                size_hint:0.4,0.55
+                on_press: root.add_user(root.ids.username.text, root.ids.password.text)     #passing the text inputed as username and password into the add_user() function of SignupScreen class
+
+<SignupScreenSuccess>:
+    GridLayout:
+        cols:1
+        Label:
+            text:"Signup Successful"
+        Button:
+            text:"Login"
+            on_press:root.login_redirect()
+
+<LoginScreenSuccess>:
+    GridLayout:
+        cols:1
+        padding:20,20
+        spacing:20,20
+        RelativeLayout:
+            ImageButton:
+                source:'logout_hover.png' if self.hovered else 'logout_nothover.png'    #adding png images as button which changes on hovering on it using the hoverable class externally downloaded and kept in the same floder
+                size_hint:0.35,0.35
+                pos_hint:{'center_x': 0.93,'center_y':0.8}
+                on_press: root.log_out()
+        Label:
+            text:"How do you feel"
+        TextInput:
+            id:emotion
+            hint_text:"Eg. Sad, Happy, Excited..."
+        Button:
+            text:"Enlighten Me"
+            on_press:root.get_quote(root.ids.emotion.text)
+        ScrollView:
+            Label:
+                id:quote
+                text:""
+                text_size: self.width, None         
+                size_hint_y: None                   #removing vertical limitation of the label widget
+                height: self.texture_size[1]        #dynamic height of the label
+
+<RootWidget>:                                   #rootwidget is a invisible widget which keeps record of all screens of the app 
+    LoginScreen:                                #first screen to be displayed when the window opens 
+        name:"login_screen"
+    SignupScreen:
+        name:"signup_screen"
+    SignupScreenSuccess:
+        name:"signup_screen_success"
+    LoginScreenSuccess:
+        name:"login_screen_success"
