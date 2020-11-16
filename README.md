@@ -3,7 +3,7 @@
 
 ## Running the program - 
 - Make a virtual environment, install the libraries mentioned in the program. 
-- Run the "main.py" file. You should be able to navigate through the app now.
+- Run the "main.py" file. You should be able to navigate through the app.
 
 
 
